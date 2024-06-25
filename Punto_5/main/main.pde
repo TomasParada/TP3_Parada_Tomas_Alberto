@@ -1,0 +1,47 @@
+Tank tank;
+Pared pared;
+ArrayList<Proyectil> proyectiles;
+PImage tankImage;
+PImage proyectilImage;
+int frameStart1 = 0;
+int frameEnd1 = 350;
+int frameStart2 = 370;
+int frameEnd2 = 780;
+
+void setup() {
+    size(800, 600);
+    tankImage = loadImage("tanque.png");
+    tankImage.resize(100, 100);
+    proyectilImage = loadImage("proyectil.png");
+    proyectilImage.resize(15, 10);
+    float tankRightBoundary = 678;
+    float tankLeftBoundary = 0;
+    tank = new Tank(width / 2, height / 2, tankImage, tankRightBoundary, tankLeftBoundary);
+    pared = new Pared(new PVector(width, height / 2), frameStart1, frameEnd1, frameStart2, frameEnd2);
+    proyectiles = new ArrayList<Proyectil>();
+}
+
+void draw() {
+    background(#1CE5CC);
+    tank.update(proyectiles, proyectilImage);
+    tank.display();
+    pared.checkCollision(proyectiles);
+    pared.update();
+    pared.dibujar();
+    for (Proyectil p : proyectiles) {
+        p.update();
+        p.display();
+    }
+}
+
+void keyPressed() {
+    if (key == 'd') {
+        tank.currentState = GameState.MOVE_RIGHT;
+    } else if (key == 'a') {
+        tank.currentState = GameState.MOVE_LEFT;
+    } else if (key == 'f') {
+        tank.currentState = GameState.FIRE;
+    } else if (key == 'r') {
+        pared.resetImpact();
+    }
+}
